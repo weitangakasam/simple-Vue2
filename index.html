@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="app"></div>
+    <!-- <input oninput="input(this)" /> -->
+    <script src="./test.js"></script>
+    <script>
+        var data = {
+            aa: '欢迎',
+            bb: 'Vue',
+            num: -1,
+            test: [{ a: 1, key: 1 }, { b: 2, key: 2 }]
+        }
+        Vue.component(
+            "myComponent", {
+                template: `<div name='a' v-show="true">
+                            <div v-for='(ele, index) in test'>
+                                {{aa}}
+                            </div>
+                            <input v-model='aa'/>
+                            <div @click="emit()">emit</div>
+                        </div>`,
+                data() {
+                    return data
+                },
+                created() {
+                    console.log('this is created')
+                },
+                methods: {
+                    emit() {
+                        this.$emit("fn")
+                    }
+                }
+            }
+        )
+        var app = new Vue({
+            el: '#app',
+            //render: h => h(aa)
+            template: `<div>
+                            <myComponent @fn="fn"></myComponent>
+                        </div>`,
+            // render: new Function(`
+            // with(this){
+            //     return _c('div' ,{} ,[true ? _c('span' ,{} ,[_l(test,function(ele ,index){
+            //     return _c('div' ,{} ,[_v(_s(aa))])
+            // })]) : _e(),_c('input' ,{on:{click:function($event){aa=222}}} ),_c('input' ,{domProps:{value:aa}} )])
+            // }
+            // `),
+            created() {
+                console.log('this is created')
+            },
+            methods: {
+                fn() {
+                    console.log(this.$options.template)
+                }
+            }
+        })
+        //测试用例(这里没给key):
+        //data.test = []   data.test.push({c:3}) 
+        //data.test =[{ a: 3,key:3 }, { b: 2,key:2 }]
+        function input(e) {
+            console.log(e.value)
+            data.aa = e.value
+        }
+    </script>
+</body>
+
+</html>
